@@ -28,12 +28,12 @@ def fetch_poster(movie_id):
 
 @app.route("/")
 def hello_world():
-    return "<p>Home!</p>"
+    return render_template("home.html")
 
 
 @app.route("/recommend")
 def recommendation():
-    movie = "Avatar"
+    movie = "Titan A.E."
     index = movies[movies["title"] == movie].index[0]
     distances = sorted(
         list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1]
@@ -53,4 +53,4 @@ def recommendation():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True, port=7000)
