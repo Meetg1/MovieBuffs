@@ -19,16 +19,12 @@ def create_database(app):
         db.create_all(app=app)
         print("Created database!")
 
-movies_dict = pickle.load(open("movie_list.pkl", "rb"))
-movies = pd.DataFrame(movies_dict)
-similarity = pickle.load(open("similarity.pkl", "rb"))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secrett"
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-# bcrypt = Bcrypt(app)
 
 
 class User(db.Model, UserMixin):
@@ -49,6 +45,9 @@ def load_user(id):
     return User.query.get(int(id))
 
 
+movies_dict = pickle.load(open("movie_list.pkl", "rb"))
+movies = pd.DataFrame(movies_dict)
+similarity = pickle.load(open("similarity.pkl", "rb"))
 
 def fetch_poster(movie_id):
     url = "https://api.themoviedb.org/3/movie/{}?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US".format(
