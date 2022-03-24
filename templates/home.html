@@ -16,28 +16,34 @@
     <div class="navbar">
         <div class="navbar-container">
             <div class="logo-container">
-                <h1 class="logo">MovieBuffs</h1>
-            </div>
+                <a href="/" style="text-decoration: none;">
+                    <h1 class="logo">
+                        MovieBuffs</h1>
+            </div></a>
             <div class="menu-container">
                 <ul class="menu-list">
-                    <li class="menu-list-item active"><a href="#" id="home" >Home</a></li>
-                    <li class="menu-list-item" ><a href="/recommend" id="recommend">Your Recommendations</a></li>
+                    <li class="menu-list-item active"><a href="/" id="home">Home</a></li>
+                    <li class="menu-list-item"><a href="/recommend" id="recommend">Your Recommendations</a></li>
                 </ul>
             </div>
             <div class="container_search">
                 <div class="search-box">
-                   <input type="text" class="search-input" placeholder="Search..">
-             
-                   <button class="search-button">
-                     <i class="fas fa-search"></i>
-                   </button>
+                    <input type="text" class="search-input" placeholder="Search..">
+
+                    <button class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
             </div>
 
+
             <div class="profile-container">
+                {% if user.is_authenticated %}
+                <li class="menu-list-item" style="list-style-type: none;"><a href="/logout" id="recommend">Logout</a>
+                </li>
                 <img class="profile-picture" src="/static/nav-profile-pic.png" alt="">
                 <div class="profile-text-container">
-                    <span class="profile-text">Profile</span>
+                    <span class="profile-text">{{current_user.username}}</span>
                     <i class="fas fa-caret-down"></i>
                 </div>
                 <div class="toggle">
@@ -45,78 +51,87 @@
                     <i class="fas fa-sun toggle-icon"></i>
                     <div class="toggle-ball"></div>
                 </div>
+
+                {% else %}
+                <li class="menu-list-item" style="list-style-type: none;"><a href="/login" id="recommend">Login</a>
+                </li>
+                {% endif %}
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="content-container">
-            <div class="movie-list-container">
-                <br>
-                <br>
-                <h1 class="movie-list-title">Now Playing</h1>
-                <div class="movie-list-wrapper">
-                    <div class="movie-list">
-                        {% for movie in now_playing %}
-                        <a href="#" style="text-decoration:none; color:white">
-                            <div class="movie-list-item">
+    <div class="results">
+
+
+        <div class="container">
+            <div class="content-container">
+                <div class="movie-list-container">
+                    <br>
+                    <br>
+                    <h1 class="movie-list-title">In Theatres</h1>
+                    <div class="movie-list-wrapper">
+                        <div class="movie-list">
+                            {% for movie in now_playing %}
+
+                            <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
                                 <span class="movie-list-item-title">{{movie.title}}</span>
                                 <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
                             </div>
-                        </a>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <i class="fas fa-chevron-right arrow"></i>
                     </div>
-                    <i class="fas fa-chevron-right arrow"></i>
                 </div>
-            </div>
 
-            <div class="movie-list-container">
-                <br>
-                <br>
-                <h1 class="movie-list-title">Top Rated</h1>
-                <div class="movie-list-wrapper">
-                    <div class="movie-list">
-                        {% for movie in top_rated %}
-                        <a href="#" style="text-decoration:none; color:white">
-                            <div class="movie-list-item">
+                <div class="movie-list-container">
+                    <br>
+                    <br>
+                    <h1 class="movie-list-title">Top Rated</h1>
+                    <div class="movie-list-wrapper">
+                        <div class="movie-list">
+                            {% for movie in top_rated %}
+
+                            <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
                                 <span class="movie-list-item-title">{{movie.title}}</span>
                                 <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
                             </div>
-                        </a>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <i class="fas fa-chevron-right arrow"></i>
                     </div>
-                    <i class="fas fa-chevron-right arrow"></i>
                 </div>
-            </div>
 
-            <div class="movie-list-container">
-                <br>
-                <br>
-                <h1 class="movie-list-title">Popular</h1>
-                <div class="movie-list-wrapper">
-                    <div class="movie-list">
-                        {% for movie in popular_movies %}
-                        <a href="#" style="text-decoration:none; color:white">
-                            <div class="movie-list-item">
+                <div class="movie-list-container">
+                    <br>
+                    <br>
+                    <h1 class="movie-list-title">Trending</h1>
+                    <div class="movie-list-wrapper">
+                        <div class="movie-list">
+                            {% for movie in popular_movies %}
+
+                            <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
                                 <span class="movie-list-item-title">{{movie.title}}</span>
                                 <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
                             </div>
-                        </a>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <i class="fas fa-chevron-right arrow"></i>
                     </div>
-                    <i class="fas fa-chevron-right arrow"></i>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
     </div>
-    <script src="/static/home.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='home.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='movie.js')}}"></script>
 </body>
 
 </html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NEW</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+
+</head>
+
+<body id="content">
+
+    <div class="results" style='background-image: url("../static/image.jpg");background-repeat: repeat'>
+        <center>
+            <h2 id="name" class="text-uppercase" style="font-family: 'Rowdies', cursive;">{{title}}</h2>
+        </center>
+
+        <br />
+
+        <div id="mycontent">
+            <div id="mcontent">
+                <div class="poster-lg">
+                    <img class="poster" style="border-radius: 40px;margin-left: 90px;" height="400" width="250"
+                        src="{{poster}}">
+                </div>
+                <div id="details">
+                    <br />
+                    <h3 id="title" style="color:white;">TITLE: &nbsp;{{title}}</h3>
+                    <h3 id="overview" style="color:white;max-width: 85%">OVERVIEW:
+                        <br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{overview}}
+                    </h3>
+                    <h3 id="vote_average" style="color:white;">RATING: &nbsp;{{vote_average}}/10 ({{vote_count}} votes)
+                    </h3>
+                    <h3 id="genres" style="color:white;">GENRE: &nbsp;{{genres}}</h3>
+                    <h3 id="date" style="color:white;">RELEASE DATE: &nbsp;{{release_date}}</h3>
+                    <h3 id="runtime" style="color:white;">RUNTIME: &nbsp;{{runtime}}</h3>
+                    <h3 id="status" style="color:white;">STATUS: &nbsp;{{status}}</h3>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="container">
+
+            {% if casts|length > 1 %}
+            <div class="movie" style="color: #E8E8E8;">
+                <center>
+                    <h2 style="font-family: 'Rowdies', cursive;">TOP CAST</h2>
+                </center>
+            </div>
+
+
+            <div class="movie-content">
+                {% for name, details in casts.items() if not casts.hidden %}
+                <div class="castcard card" style="width: 14rem;" title="Click to know more about {{name}}"
+                    data-toggle="modal" data-target="#{{details[0]}}">
+                    <div class="imghvr">
+                        <img class="card-img-top cast-img" id="{{details[0]}}" height="360" width="240"
+                            alt="{{name}} - profile" src="{{details[2]}}">
+                    </div>
+                    <div class="card-body" style="font-family: 'Rowdies', cursive;font-size: 18px;">
+                        <h5 class="card-title">{{name|upper}}</h5>
+                        <h5 class="card-title" style="font-size: 18px"><span style="color:#756969;font-size: 18px;">AS
+                                {{details[1]|upper}}</span></h5>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br />
+
+
+            <br /><br /><br /><br />
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='movie.js')}}"></script>
+
+</body>
+
+</html>
