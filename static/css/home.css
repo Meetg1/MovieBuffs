@@ -49,6 +49,21 @@ body {
 .menu-list-item.active {
   font-weight: bold;
 }
+
+#home,
+#recommend {
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+}
+
+#home.active,
+#recommend.active {
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+}
+
 .profile-container {
   flex: 2;
   display: flex;
@@ -292,6 +307,18 @@ body {
   color: tomato;
   background: none;
 }
+.search-input.active {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 10px 0 0 10px;
+  border-right: none;
+  outline: none;
+  font-size: 15px;
+  color: tomato;
+  background: none;
+}
+
 .search-button {
   text-align: center;
   height: 30px;
@@ -306,6 +333,22 @@ body {
   border-left: 4px solid white;
   color: white;
 }
+
+.search-button.active {
+  text-align: center;
+  height: 30px;
+  width: 40px;
+  outline: none;
+  cursor: pointer;
+  border: 2px solid black;
+  border-radius: 0 10px 10px 0;
+  border-left: none;
+  background: none;
+  font-size: 15px;
+  border-left: 4px solid black;
+  color: black;
+}
+
 .container_search {
   width: 35%;
   position: absolute;
