@@ -11,6 +11,9 @@ import json
 
 from os import path
 
+import os
+my_api_key = os.getenv('my_api_key')
+
 
 DB_NAME = "database.db"
 
@@ -65,9 +68,21 @@ def fetch_poster(movie_id):
 
 
 @app.route("/")
-@login_required
+# @login_required
 def home():
-    return render_template('home.html')
+    url = "https://api.themoviedb.org/3/movie/popular?api_key="+my_api_key +"&language=en-US&page=1&include_adult=false"
+    data = requests.get(url)
+    data = data.json()
+    popular_movies = data['results']
+    url = "https://api.themoviedb.org/3/movie/now_playing?api_key="+my_api_key +"&language=en-US&page=1&include_adult=false"
+    data = requests.get(url)
+    data = data.json()
+    now_playing = data['results']
+    url = "https://api.themoviedb.org/3/movie/top_rated?api_key="+my_api_key +"&language=en-US&page=1&include_adult=false"
+    data = requests.get(url)
+    data = data.json()
+    top_rated = data['results']
+    return render_template('home.html',popular_movies=popular_movies,now_playing=now_playing,top_rated=top_rated )
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
