@@ -1,14 +1,4 @@
-from flask import (
-    Flask,
-    render_template,
-    session,
-    request,
-    url_for,
-    redirect,
-    flash,
-    abort,
-    session,
-)
+from flask import Flask, render_template, session, request, url_for, redirect, flash, abort, session,redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
     LoginManager,
@@ -89,13 +79,46 @@ def fetch_poster(movie_id):
     return full_path
 
 
-@app.route("/")
+@app.route("/",methods=['POST', 'GET'])
 def home():
-    url = (
-        "https://api.themoviedb.org/3/movie/popular?api_key="
-        + my_api_key
-        + "&language=en-US&page=1&include_adult=false"
-    )
+    if request.method=="POST":
+        movie_name=request.form.get("search")
+        print(movie_name)
+        url="https://api.themoviedb.org/3/search/movie?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US&query={}&page=1&include_adult=false".format(movie_name)
+        data = requests.get(url)
+        data = data.json()
+        result=data['results'][0]
+        
+        id=result['id']
+        title=result['title']
+        overview=result['overview']
+        poster_url="https://image.tmdb.org/t/p/original"+result['poster_path']
+        
+        release_date=result['release_date']
+        vote_average=result['vote_average']
+        vote_count=result['vote_count']
+        url1="https://api.themoviedb.org/3/movie/{}?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US".format(id)
+        data1 = requests.get(url1)
+        data1 = data1.json()
+        runtime=data1['runtime']
+        genres_list=data1['genres']
+        genres=[]
+        for i in genres_list:
+            genres.append(i['name'])
+        genres_str=" ".join(genres)
+        status=data1['status']
+
+        cast_url="https://api.themoviedb.org/3/movie/{}/credits?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US".format(id)
+        data2 = requests.get(cast_url)
+        data2 = data2.json()
+
+        return render_template('movie.html',title=title,poster=poster_url,overview=overview,vote_average=vote_average,vote_count=vote_count,release_date=release_date,runtime=runtime,status=status,genres=genres_str)
+
+    # print(url)
+    url = "https://api.themoviedb.org/3/movie/popular?api_key="+my_api_key +"&language=en-US&page=1&include_adult=false"
+    data = requests.get(url)
+    data = data.json()
+    url = "https://api.themoviedb.org/3/movie/popular?api_key="+my_api_key +"&language=en-US&page=1&include_adult=false"
     data = requests.get(url)
     data = data.json()
     popular_movies = data["results"]
