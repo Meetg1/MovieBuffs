@@ -1,18 +1,4 @@
-<<<<<<< HEAD
 from flask import Flask, render_template, session, request, url_for, redirect, flash, abort, session,redirect
-=======
-from flask import (
-    Flask,
-    render_template,
-    session,
-    request,
-    url_for,
-    redirect,
-    flash,
-    abort,
-    session,
-)
->>>>>>> 044e786d9d12bc0d009a1a4bdd2e63157e49c94b
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
     LoginManager,
