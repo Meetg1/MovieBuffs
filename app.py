@@ -145,7 +145,7 @@ def login():
 
 
 @app.route("/signup", methods=["GET", "POST"])
-def sign_up():
+def signup():
     if request.method == "POST":
         print("asdasdas")
         email = request.form.get("email")
@@ -162,12 +162,8 @@ def sign_up():
             flash("Username is already in use.", category="error")
         elif password1 != password2:
             flash("Passwords don't match!", category="error")
-        # elif len(username) < 2:
-        #     flash('Username is too short.', category='error')
-        # elif len(password1) < 6:
-        #     flash('Password is too short.', category='error')
-        # elif len(email) < 4:
-        #     flash("Email is invalid.", category='error')
+        elif len(password1) < 6:
+            flash('Password is too short.', category='error')
         else:
             new_user = User(
                 email=email,
@@ -176,9 +172,10 @@ def sign_up():
             )
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user, remember=True)
+            # login_user(new_user, remember=True)
             flash("User created!")
-        return redirect(url_for("home"))
+            return redirect(url_for("login"))
+        return redirect(url_for("signup"))
 
     return render_template("signup.html", user=current_user)
 
@@ -285,6 +282,7 @@ def recommend():
 
 
 @app.route("/recommend")
+@login_required
 def recommendation():
     movie = "Titan A.E."
     index = movies[movies["title"] == movie].index[0]
