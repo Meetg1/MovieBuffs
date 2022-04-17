@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 
@@ -149,4 +150,157 @@
 
 </body>
 
+=======
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Movie Buffs</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+    <link rel="stylesheet" href="/static/css/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+</head>
+
+<body id="content">
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo-container">
+                <a href="/" style="text-decoration: none;">
+                    <h1 class="logo">
+                        MovieBuffs</h1>
+            </div></a>
+            <div class="menu-container">
+                <ul class="menu-list">
+                    <li class="menu-list-item active"><a href="/" id="home">Home</a></li>
+                    <li class="menu-list-item"><a href="/recommend" id="recommend">Your Recommendations</a></li>
+                </ul>
+            </div>
+            <div class="container_search">
+                <form action="" method="POST">
+                    <div class="search-box">
+                        <input class="search-input" type="text" name="search" placeholder="Search.." autocomplete="off">
+                        <button class="search-button" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="profile-container">
+                {% if user.is_authenticated %}
+                <li class="menu-list-item" style="list-style-type: none;"><a href="/logout" id="recommend">Logout</a>
+                </li>
+                <img class="profile-picture" src="/static/nav-profile-pic.png" alt="">
+                <div class="profile-text-container">
+                    <li class="menu-list-item" style="list-style-type: none;"><a href="/profile" id="recommend">
+                        <span class="profile-text">{{current_user.username}}</span>
+                    </a>
+                </div>
+                <div class="toggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <i class="fas fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
+
+                {% else %}
+                <li class="menu-list-item" style="list-style-type: none;"><a href="/login" id="recommend">Login</a>
+                </li>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="results">
+        <center>
+            <h2 id="name" class="text-uppercase" style="font-family: 'Rowdies', cursive;">{{title}}</h2>
+        </center>
+
+        <br /><br><br><br>
+
+        <div id="mycontent">
+            <div id="mcontent">
+                <div class="poster-lg">
+                    <img class="poster" style="border-radius: 40px;margin-left: 90px;" height="400" width="250"
+                        src="https://www.shareicon.net/data/512x512/2016/06/25/786551_people_512x512.png">
+                </div>
+                <div id="details">
+                    <br /><br><br><br><br>
+                    <h1 style="color:white;">Username : {{user}}</h1>
+                    <br>
+                    <h1 style="color:white;">Email : {{email}}</h1>
+                    <br>
+                    <h1 style="color:white;">Movies Watched : 5</h1>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+<br><br><br><br>
+        <div class="content-container">
+            <div class="movie-list-container">
+                <h1 class="movie-list-title" style="color:white;">My Watched Movies</h1>
+                <div class="movie-list-wrapper">
+                    <div class="movie-list">
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="/static/img/10.jpg" alt="">
+                            <span class="movie-list-item-title">Her</span>
+                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                                hic fugit similique accusantium.</p>
+                            <button class="movie-list-item-button">Watch</button>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="/static/img/11.jpg" alt="">
+                            <span class="movie-list-item-title">Star Wars</span>
+                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                                hic fugit similique accusantium.</p>
+                            <button class="movie-list-item-button">Watch</button>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="/static/img/12.jpg" alt="">
+                            <span class="movie-list-item-title">Storm</span>
+                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                                hic fugit similique accusantium.</p>
+                            <button class="movie-list-item-button">Watch</button>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="/static/img/13.jpg" alt="">
+                            <span class="movie-list-item-title">1917</span>
+                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                                hic fugit similique accusantium.</p>
+                            <button class="movie-list-item-button">Watch</button>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="/static/img/14.jpg" alt="">
+                            <span class="movie-list-item-title">Avengers</span>
+                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                                hic fugit similique accusantium.</p>
+                            <button class="movie-list-item-button">Watch</button>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="/static/img/15.jpg" alt="">
+                            <span class="movie-list-item-title">Her</span>
+                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                                hic fugit similique accusantium.</p>
+                            <button class="movie-list-item-button">Watch</button>
+                        </div>
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="/static/img/16.jpg" alt="">
+                            <span class="movie-list-item-title">Her</span>
+                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                                hic fugit similique accusantium.</p>
+                            <button class="movie-list-item-button">Watch</button>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+                </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='home.js')}}"></script>
+
+</body>
+
+>>>>>>> 8ccacfcaa94839789a7b03db2243dfd62c80c29f
 </html>
