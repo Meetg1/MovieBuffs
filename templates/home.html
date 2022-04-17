@@ -42,8 +42,9 @@
                 </li>
                 <img class="profile-picture" src="/static/nav-profile-pic.png" alt="">
                 <div class="profile-text-container">
-                    <span class="profile-text">{{current_user.username}}</span>
-                    <i class="fas fa-caret-down"></i>
+                    <li class="menu-list-item" style="list-style-type: none;"><a href="/profile" id="recommend">
+                        <span class="profile-text">{{current_user.username}}</span>
+                    </a>
                 </div>
                 <div class="toggle">
                     <i class="fas fa-moon toggle-icon"></i>
@@ -99,9 +100,7 @@
                             </div>
                             {% endfor %}
                         </div>
-                        <i class="fas fa-chevron-r
-
-ight arrow"></i>
+                        <i class="fas fa-chevron-right arrow"></i>
                     </div>
                 </div>
 
