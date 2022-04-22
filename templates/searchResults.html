@@ -1,0 +1,107 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <title>Movie Buffs</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo-container">
+                <a href="/" style="text-decoration: none;">
+                    <h1 class="logo">
+                        MovieBuffs</h1>
+            </div></a>
+            <div class="menu-container">
+                <ul class="menu-list">
+                    <li class="menu-list-item active"><a href="/" id="home">Home</a></li>
+                    <li class="menu-list-item"><a href="/recommend" id="recommend">Your Recommendations</a></li>
+                </ul>
+            </div>
+            <div class="container_search">
+                <form action="" method="POST">
+                    <div class="search-box">
+                        <input class="search-input" type="text" name="search" placeholder="Search.." autocomplete="off">
+                        <button class="search-button" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="profile-container">
+                {% if user.is_authenticated %}
+                <li class="menu-list-item" style="list-style-type: none;"><a href="/logout" id="recommend">Logout</a>
+                </li>
+                <img class="profile-picture" src="/static/nav-profile-pic.png" alt="">
+                <div class="profile-text-container">
+                    <li class="menu-list-item" style="list-style-type: none;"><a href="/profile" id="recommend">
+                            <span class="profile-text">{{current_user.username}}</span>
+                        </a>
+                </div>
+                <div class="toggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <i class="fas fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
+
+                {% else %}
+                <li class="menu-list-item" style="list-style-type: none;"><a href="/login" id="recommend">Login</a>
+                </li>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="results">
+        <div class="container">
+            <div class="content-container">
+                <div class="movie-list-container">
+                    <br>
+                    <br>
+                    <h1 class="movie-list-title">Search Results</h1>
+                    <div class="movie-list-wrapper">
+                        {% if searchResults == False %}
+                        <h3>No movies found!</h3>
+                        {% else %}
+                        <div class="movie-list">
+                            {% for movie in searchResults %}
+                            {% if user.is_authenticated %}
+                            <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
+                                <img class="movie-list-item-img"
+                                    src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
+                                <span class="movie-list-item-title">{{movie.title}}</span>
+                                <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
+                            </div>
+                            {%else%}
+                            <div class="movie-list-item" onclick="window.location.href='/login'" title={{movie.id}}>
+                                <img class="movie-list-item-img"
+                                    src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
+                                <span class="movie-list-item-title">{{movie.title}}</span>
+                                <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='home.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='movie.js')}}"></script>
+</body>
+
+</html>
