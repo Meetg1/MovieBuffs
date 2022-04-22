@@ -3,8 +3,13 @@ my_api_key = "1cf9bf99f5a3d0fa43f7dd0effa15996";
 // will be invoked when clicking on the recommended movie cards
 function goToMoviePage(e) {
   $("#loader").fadeIn();
-  console.log(e);
   var movie_id = e.getAttribute("title");
+  get_movie_details(movie_id, my_api_key);
+}
+
+function goToMoviePage2(title) {
+  $("#loader").fadeIn();
+  var movie_id = title;
   get_movie_details(movie_id, my_api_key);
 }
 
@@ -75,6 +80,7 @@ function show_details(movie_details, my_api_key, movie_id) {
     cast_bios: JSON.stringify(ind_cast.cast_bios),
     cast_places: JSON.stringify(ind_cast.cast_places),
     imdb_id: imdb_id,
+    tmdb_id: movie_id,
     poster: poster,
     genres: my_genre,
     overview: overview,
@@ -200,4 +206,34 @@ function get_movie_cast(movie_id, my_api_key) {
     cast_chars: cast_chars,
     cast_profiles: cast_profiles,
   };
+}
+
+// will be invoked when clicking on the watched button
+function addToWatch(e) {
+  $("#loader").fadeIn();
+  title = e.children[1].getAttribute("title");
+  genre = e.children[4].getAttribute("title");
+  length = e.children[6].getAttribute("title");
+  posterPath = e.children[8].getAttribute("title");
+  tmdb_id = e.children[9].getAttribute("title");
+
+  movie = {
+    title,
+    posterPath,
+    tmdb_id,
+    length,
+    genre,
+  };
+
+  $.ajax({
+    type: "POST",
+    data: movie,
+    url: "/addToWatchedList",
+    complete: function () {
+      $("#loader").delay(500).fadeOut();
+    },
+    success: function () {
+      goToMoviePage2(tmdb_id);
+    },
+  });
 }

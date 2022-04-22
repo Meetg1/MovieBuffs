@@ -13,6 +13,52 @@
 
 <body id="content">
 
+    <style>
+        .notwatchbtn {
+            background-color: #f14e4e;
+            display: inline-block;
+            padding: 0.3em 1.2em;
+            margin: 0 0.1em 0.1em 0;
+            border: 0.16em solid rgba(255, 255, 255, 0);
+            border-radius: 2em;
+            box-sizing: border-box;
+            text-decoration: none;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            color: #FFFFFF;
+            text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+            text-align: center;
+            transition: all 0.2s;
+            font-size: 1.5rem;
+        }
+
+        .notwatchbtn:hover {
+            border-color: rgba(255, 255, 255, 1);
+        }
+
+        .watchbtn {
+            background-color: #157347;
+            display: inline-block;
+            padding: 0.3em 1.2em;
+            margin: 0 0.1em 0.1em 0;
+            border: 0.16em solid rgba(255, 255, 255, 0);
+            border-radius: 2em;
+            box-sizing: border-box;
+            text-decoration: none;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            color: #FFFFFF;
+            text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+            text-align: center;
+            transition: all 0.2s;
+            font-size: 1.5rem;
+        }
+
+        .watchbtn:hover {
+            border-color: rgba(255, 255, 255, 1);
+        }
+    </style>
+
     <div class="results" style='background-image: url("../static/image.jpg");background-repeat: repeat'>
         <center>
             <h2 id="name" class="text-uppercase" style="font-family: 'Rowdies', cursive;">{{title}}</h2>
@@ -28,19 +74,48 @@
                 </div>
                 <div id="details">
                     <br />
-                    <h3 id="title" style="color:white;">TITLE: &nbsp;{{title}}</h3>
-                    <h3 id="overview" style="color:white;max-width: 85%">OVERVIEW:
-                        <br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{overview}}
+                    <h3 title="{{title}}" class="title" style="color:white;">TITLE: &nbsp;{{title}}</h3>
+                    <h3 title="{{overview}}" class="overview" style="color:white;max-width: 85%">OVERVIEW:
+                        <br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{overview}}
                     </h3>
-                    <h3 id="vote_average" style="color:white;">RATING: &nbsp;{{vote_average}}/10 ({{vote_count}} votes)
+                    <h3 class="vote_average" style="color:white;">RATING: &nbsp;{{vote_average}}/10 ({{vote_count}}
+                        votes)
                     </h3>
-                    <h3 id="genres" style="color:white;">GENRE: &nbsp;{{genres}}</h3>
-                    <h3 id="date" style="color:white;">RELEASE DATE: &nbsp;{{release_date}}</h3>
-                    <h3 id="runtime" style="color:white;">RUNTIME: &nbsp;{{runtime}}</h3>
-                    <h3 id="status" style="color:white;">STATUS: &nbsp;{{status}}</h3>
+                    <h3 title="{{genres}}" class="genres" style="color:white;">GENRE: &nbsp;{{genres}}</h3>
+                    <h3 title="{{release_date}}" class="date" style="color:white;">RELEASE DATE: &nbsp;{{release_date}}
+                    </h3>
+                    <h3 title="{{runtime}}" class="runtime" style="color:white;">RUNTIME: &nbsp;{{runtime}}</h3>
+                    <h3 title="{{status}}" class="status" style="color:white;">STATUS: &nbsp;{{status}}</h3>
+                    <span hidden title="{{poster}}"></span>
+                    <span hidden title="{{tmdb_id}}"></span>
+
+                    {% if watched == True %}
+                    <button class="watchbtn" type="submit">Watched <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                            height="25" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 10">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                            <path
+                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                        </svg></button>
+                    {% else %}
+                    <button onclick="addToWatch(this.parentElement)" class="notwatchbtn" type="submit">Not
+                        Watched
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                            class="bi bi-eye-slash-fill" viewBox="0 0 16 10">
+                            <path
+                                d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
+                            <path
+                                d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
+                        </svg></button>
+                    {% endif %}
+
+
+
                 </div>
+
             </div>
+
         </div>
+
         <br />
 
         <div class="container">
