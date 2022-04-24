@@ -43,8 +43,8 @@
                 <img class="profile-picture" src="/static/nav-profile-pic.png" alt="">
                 <div class="profile-text-container">
                     <li class="menu-list-item" style="list-style-type: none;"><a href="/profile" id="recommend">
-                        <span class="profile-text">{{current_user.username}}</span>
-                    </a>
+                            <span class="profile-text">{{current_user.username}}</span>
+                        </a>
                 </div>
                 <div class="toggle">
                     <i class="fas fa-moon toggle-icon"></i>
@@ -71,13 +71,21 @@
                     <div class="movie-list-wrapper">
                         <div class="movie-list">
                             {% for movie in now_playing %}
-
+                            {% if user.is_authenticated %}
                             <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
                                 <span class="movie-list-item-title">{{movie.title}}</span>
                                 <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
                             </div>
+                            {%else%}
+                            <div class="movie-list-item" onclick="window.location.href='/login'" title={{movie.id}}>
+                                <img class="movie-list-item-img"
+                                    src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
+                                <span class="movie-list-item-title">{{movie.title}}</span>
+                                <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
+                            </div>
+                            {% endif %}
                             {% endfor %}
                         </div>
                         <i class="fas fa-chevron-right arrow"></i>
@@ -91,13 +99,21 @@
                     <div class="movie-list-wrapper">
                         <div class="movie-list">
                             {% for movie in top_rated %}
-
+                            {% if user.is_authenticated %}
                             <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
                                 <span class="movie-list-item-title">{{movie.title}}</span>
                                 <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
                             </div>
+                            {%else%}
+                            <div class="movie-list-item" onclick="window.location.href='/login'" title={{movie.id}}>
+                                <img class="movie-list-item-img"
+                                    src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
+                                <span class="movie-list-item-title">{{movie.title}}</span>
+                                <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
+                            </div>
+                            {% endif %}
                             {% endfor %}
                         </div>
                         <i class="fas fa-chevron-right arrow"></i>
@@ -111,13 +127,21 @@
                     <div class="movie-list-wrapper">
                         <div class="movie-list">
                             {% for movie in popular_movies %}
-
+                            {% if user.is_authenticated %}
                             <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
                                 <span class="movie-list-item-title">{{movie.title}}</span>
                                 <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
                             </div>
+                            {%else%}
+                            <div class="movie-list-item" onclick="window.location.href='/login'" title={{movie.id}}>
+                                <img class="movie-list-item-img"
+                                    src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
+                                <span class="movie-list-item-title">{{movie.title}}</span>
+                                <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
+                            </div>
+                            {% endif %}
                             {% endfor %}
                         </div>
                         <i class="fas fa-chevron-right arrow"></i>

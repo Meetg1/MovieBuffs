@@ -56,7 +56,16 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String())
+    moviesWatched = db.relationship('Movie', backref='user', passive_deletes=True)
 
+class Movie(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    # imdb_id = db.Column(db.String())
+    title = db.Column(db.String())
+    posterPath = db.Column(db.String())
+    length = db.Column(db.String())
+    watcher = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete="CASCADE"), nullable=False)
 
 create_database(app)
 
@@ -94,55 +103,22 @@ def fetch_poster(movie_id):
 def home():
     if request.method == "POST":
         movie_name = request.form.get("search")
-        print(movie_name)
+        # print(movie_name)
         url = "https://api.themoviedb.org/3/search/movie?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US&query={}&page=1&include_adult=false".format(
             movie_name
         )
         data = requests.get(url)
         data = data.json()
-        result = data["results"][0]
-
-        id = result["id"]
-        title = result["title"]
-        overview = result["overview"]
-        poster_url = "https://image.tmdb.org/t/p/original" + result["poster_path"]
-
-        release_date = result["release_date"]
-        vote_average = result["vote_average"]
-        vote_count = result["vote_count"]
-        url1 = "https://api.themoviedb.org/3/movie/{}?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US".format(
-            id
-        )
-        data1 = requests.get(url1)
-        data1 = data1.json()
-        runtime = data1["runtime"]
-        genres_list = data1["genres"]
-        genres = []
-        for i in genres_list:
-            genres.append(i["name"])
-        genres_str = " ".join(genres)
-        status = data1["status"]
-
-        cast_url = "https://api.themoviedb.org/3/movie/{}/credits?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US".format(
-            id
-        )
-        data2 = requests.get(cast_url)
-        data2 = data2.json()
-
+        searchResults = data["results"]
+        if len(searchResults) == 0:
+            searchResults = False
+       
         return render_template(
-            "movie.html",
-            title=title,
-            poster=poster_url,
-            overview=overview,
-            vote_average=vote_average,
-            vote_count=vote_count,
-            release_date=release_date,
-            runtime=runtime,
-            status=status,
-            genres=genres_str,
+            "searchResults.html",
+            user=current_user,
+            searchResults=searchResults,
         )
 
-    # print(url)
     url = (
         "https://api.themoviedb.org/3/movie/popular?api_key="
         + my_api_key
@@ -206,7 +182,6 @@ def login():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        print("asdasdas")
         email = request.form.get("email")
         username = request.form.get("username")
         password1 = request.form.get("password1")
@@ -221,8 +196,8 @@ def signup():
             flash("Username is already in use.", category="error")
         elif password1 != password2:
             flash("Passwords don't match!", category="error")
-        elif len(password1) < 6:
-            flash("Password is too short.", category="error")
+        # elif len(password1) < 6:
+        #     flash("Password is too short.", category="error")
         else:
             new_user = User(
                 email=email,
@@ -274,6 +249,7 @@ def recommend():
     cast_places = request.form["cast_places"]
     cast_profiles = request.form["cast_profiles"]
     imdb_id = request.form["imdb_id"]
+    tmdb_id = request.form["tmdb_id"]
     poster = request.form["poster"]
     genres = request.form["genres"]
     overview = request.form["overview"]
@@ -323,10 +299,18 @@ def recommend():
         for i in range(len(cast_places))
     }
 
+    watched = False
+    movies = current_user.moviesWatched
+    for movie in movies:
+        if movie.title == title: #user has watched the movie
+            watched = True
+            break    
+
     # # passing all the data to the html file
     return render_template(
         "movie.html",
         title=title,
+        tmdb_id = tmdb_id,
         poster=poster,
         overview=overview,
         vote_average=vote_average,
@@ -337,10 +321,12 @@ def recommend():
         genres=genres,
         casts=casts,
         cast_details=cast_details,
+        watched = watched
     )
 
 
 @app.route("/profile", methods=["GET", "POST"])
+@login_required
 def profile():
     return render_template(
         "profile.html",
@@ -348,6 +334,27 @@ def profile():
         email=current_user.email,
     )
 
+
+@app.route("/addToWatchedList",methods=["POST"])
+@login_required
+def addToWatchedList():
+    if request.method == "POST":
+        title = request.form["title"]
+        posterPath = request.form["posterPath"]
+        length = request.form["length"]
+        genre = request.form["genre"]
+        # print(title)
+        # print(posterPath)
+        # print(length)
+        # print(genre)
+        hours = int(length[0])
+        minutes = int(length[-9:-7])
+        length = str(int((60*hours) + minutes))
+
+        movie = Movie(title = title,posterPath = posterPath,length = length, watcher = current_user.id)
+        db.session.add(movie)
+        db.session.commit()
+        return "success"
 
 @app.route("/recommend")
 @login_required
