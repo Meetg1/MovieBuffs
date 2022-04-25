@@ -18,7 +18,9 @@ _mailinglist
 .idea/
 docs/_build/
 .vscode
-
+nlp_model.pkl
+tranform.pkl
+imdb_master.csv
 # Coverage reports
 htmlcov/
 .coverage
