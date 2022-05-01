@@ -46,16 +46,17 @@
                             <span class="profile-text">{{current_user.username}}</span>
                         </a>
                 </div>
-                <div class="toggle">
-                    <i class="fas fa-moon toggle-icon"></i>
-                    <i class="fas fa-sun toggle-icon"></i>
-                    <div class="toggle-ball"></div>
-                </div>
+
 
                 {% else %}
                 <li class="menu-list-item" style="list-style-type: none;"><a href="/login" id="recommend">Login</a>
                 </li>
                 {% endif %}
+                <div class="toggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <i class="fas fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
             </div>
         </div>
     </div>

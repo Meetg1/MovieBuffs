@@ -57,6 +57,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String())
+    watchTime = db.Column(db.Integer,default=0)
+    favGenre = db.Column(db.String())
     moviesWatched = db.relationship('Movie', backref='user', passive_deletes=True)
 
 class Movie(db.Model):
@@ -65,6 +67,7 @@ class Movie(db.Model):
     title = db.Column(db.String())
     posterPath = db.Column(db.String())
     length = db.Column(db.String())
+    genre = db.Column(db.String())
     watcher = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete="CASCADE"), nullable=False)
 
@@ -332,6 +335,9 @@ def profile():
         "profile.html",
         user=current_user.username,
         email=current_user.email,
+        totalMovies=len(current_user.moviesWatched),
+        watchTime=current_user.watchTime,
+        favGenre=current_user.favGenre,
     )
 
 
@@ -343,16 +349,36 @@ def addToWatchedList():
         posterPath = request.form["posterPath"]
         length = request.form["length"]
         genre = request.form["genre"]
-        # print(title)
-        # print(posterPath)
-        # print(length)
-        # print(genre)
         hours = int(length[0])
         minutes = int(length[-9:-7])
         length = str(int((60*hours) + minutes))
 
-        movie = Movie(title = title,posterPath = posterPath,length = length, watcher = current_user.id)
+        movie = Movie(title = title,posterPath = posterPath,length = length, genre = genre, watcher = current_user.id)
+
+        user = User.query.filter_by(id=current_user.id).first()
+        current_user.watchTime += (int(length)//60)
+
+
+
         db.session.add(movie)
+
+   
+        currentMovieGenres = genre.split(',')
+        genres = [x for x in currentMovieGenres]
+        for movie in current_user.moviesWatched:
+            temp = movie.genre.split(',')
+            for x in temp:
+                genres.append(x)    
+
+   
+        import statistics
+        from statistics import mode
+
+        print('genres')
+        print(genres)
+        print(mode(genres))
+        current_user.favGenre = mode(genres)
+
         db.session.commit()
         return "success"
 
