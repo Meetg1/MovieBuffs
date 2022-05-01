@@ -27,6 +27,7 @@ import pickle
 import pandas as pd
 import requests
 import json
+import random
 
 from os import path
 
@@ -152,7 +153,6 @@ def home():
     top_rated = data["results"]
     return render_template(
         "home.html",
-        user=current_user,
         popular_movies=popular_movies,
         now_playing=now_playing,
         top_rated=top_rated,
@@ -300,8 +300,8 @@ def recommend():
     }
 
     watched = False
-    movies = current_user.moviesWatched
-    for movie in movies:
+    moviesWatched = current_user.moviesWatched
+    for movie in moviesWatched:
         if movie.title == title: #user has watched the movie
             watched = True
             break    
@@ -356,27 +356,80 @@ def addToWatchedList():
         db.session.commit()
         return "success"
 
-@app.route("/recommend")
+# @app.route("/recommend")
+# @login_required
+# def recommendation():
+#     movie = "Titan A.E."
+#     index = movies[movies["title"] == movie].index[0]
+#     distances = sorted(
+#         list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1]
+#     )
+#     recommend_movies = []
+#     recommended_movie_images = []
+#     for i in distances[1:6]:
+#         recommend_movies.append(movies.iloc[i[0]].title)
+#         movie_id = movies.iloc[i[0]].movie_id
+#         recommended_movie_images.append(fetch_poster(movie_id))
+
+#     data = {
+#         "recommend_movies": recommend_movies,
+#         "recommended_movie_images": recommended_movie_images,
+#     }
+#     return render_template("recomend.html", data=data)
+
+
+@app.route("/recommendation")
 @login_required
 def recommendation():
-    movie = "Titan A.E."
-    index = movies[movies["title"] == movie].index[0]
-    distances = sorted(
-        list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1]
-    )
-    recommend_movies = []
-    recommended_movie_images = []
-    for i in distances[1:6]:
-        recommend_movies.append(movies.iloc[i[0]].title)
-        movie_id = movies.iloc[i[0]].movie_id
-        recommended_movie_images.append(fetch_poster(movie_id))
+    moviesWatched = current_user.moviesWatched
 
-    data = {
-        "recommend_movies": recommend_movies,
-        "recommended_movie_images": recommended_movie_images,
-    }
-    return render_template("recomend.html", data=data)
+    seenMovies = []
+    i = 0
+    while i<min(9,len(moviesWatched)):
+        x = random.randint(0,len(moviesWatched)-1)
+        if moviesWatched[x] not in seenMovies:
+            seenMovies.append(moviesWatched[x])
+            i+=1
 
+    print('seenMovies')
+    print(seenMovies)
+
+    print('seenMovies1')
+    print(seenMovies)
+
+    recommendedMovies = []
+    i=0
+    while i < len(seenMovies):
+        movieTitle = seenMovies[i].title
+        if not (movieTitle in movies["title"].tolist()):
+            print(movieTitle)
+            seenMovies.pop(i)
+            continue
+        index = movies[movies["title"] == movieTitle].index[0]
+        distances = sorted(
+            list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1]
+        )
+        temp = []
+        for j in distances[1:9]:
+            url = "https://api.themoviedb.org/3/search/movie?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US&query={}&page=1&include_adult=false".format(
+            movies.iloc[j[0]].title
+            )
+            data = requests.get(url)
+            data = data.json()
+            res = data["results"]
+            # print('res')
+            # print(res)
+            temp.append(res)
+        recommendedMovies.append(temp)
+        i+=1
+        # print(recommendedMovies)
+
+    print('seenMovies3')
+    print(seenMovies)
+
+    
+
+    return render_template("recommendationPage.html", seenMovies=seenMovies, recommendedMovies = recommendedMovies)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=7000)

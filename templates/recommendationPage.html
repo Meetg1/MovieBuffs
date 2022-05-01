@@ -46,55 +46,56 @@
                             <span class="profile-text">{{current_user.username}}</span>
                         </a>
                 </div>
-
-
-                {% else %}
-                <li class="menu-list-item" style="list-style-type: none;"><a href="/login" id="recommend">Login</a>
-                </li>
-                {% endif %}
                 <div class="toggle">
                     <i class="fas fa-moon toggle-icon"></i>
                     <i class="fas fa-sun toggle-icon"></i>
                     <div class="toggle-ball"></div>
                 </div>
+
+                {% else %}
+                <li class="menu-list-item" style="list-style-type: none;"><a href="/login" id="recommend">Login</a>
+                </li>
+                {% endif %}
             </div>
         </div>
     </div>
     <div class="results">
+
         <div class="container">
             <div class="content-container">
+
+                {% for i in range(seenMovies|length) %}
                 <div class="movie-list-container">
                     <br>
                     <br>
-                    <h1 class="movie-list-title">Search Results</h1>
+                    <h1 class="movie-list-title">Because you watched <span
+                            style="color:#4dbf00;">{{seenMovies[i].title}}</span>
+                    </h1>
                     <div class="movie-list-wrapper">
-                        {% if searchResults == False %}
-                        <h3>No movies found!</h3>
-                        {% else %}
                         <div class="movie-list">
-                            {% for movie in searchResults %}
+                            {% for movie in recommendedMovies[i] %}
                             {% if current_user.is_authenticated %}
-                            <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
+                            <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie[0].id}}>
                                 <img class="movie-list-item-img"
-                                    src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
-                                <span class="movie-list-item-title">{{movie.title}}</span>
-                                <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
+                                    src="https://image.tmdb.org/t/p/original{{movie[0].poster_path}}" alt="">
+                                <span class="movie-list-item-title">{{movie[0].title}}</span>
+                                <p class="movie-list-item-desc">{{movie[0].overview[:240]}}</p>
                             </div>
                             {%else%}
                             <div class="movie-list-item" onclick="window.location.href='/login'" title={{movie.id}}>
                                 <img class="movie-list-item-img"
-                                    src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
-                                <span class="movie-list-item-title">{{movie.title}}</span>
-                                <p class="movie-list-item-desc">{{movie.overview[:240]}}</p>
+                                    src="https://image.tmdb.org/t/p/original{{movie[0].poster_path}}" alt="">
+                                <span class="movie-list-item-title">{{movie[0].title}}</span>
+                                <p class="movie-list-item-desc">{{movie[0].overview[:240]}}</p>
                             </div>
                             {% endif %}
                             {% endfor %}
                         </div>
                         <i class="fas fa-chevron-right arrow"></i>
-                        {% endif %}
-
                     </div>
                 </div>
+                {% endfor %}
+
             </div>
         </div>
     </div>

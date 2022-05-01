@@ -130,8 +130,7 @@
 
             <div class="movie-content">
                 {% for name, details in casts.items() if not casts.hidden %}
-                <div class="castcard card" style="width: 14rem;" title="Click to know more about {{name}}"
-                    data-toggle="modal" data-target="#{{details[0]}}">
+                <div class="castcard card" style="width: 14rem;" data-toggle="modal" data-target="#{{details[0]}}">
                     <div class="imghvr">
                         <img class="card-img-top cast-img" id="{{details[0]}}" height="360" width="240"
                             alt="{{name}} - profile" src="{{details[2]}}">
