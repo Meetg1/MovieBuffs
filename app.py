@@ -27,6 +27,7 @@ import pickle
 import pandas as pd
 import requests
 import json
+import random
 
 from os import path
 
@@ -56,6 +57,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String())
+    watchTime = db.Column(db.Integer,default=0)
+    favGenre = db.Column(db.String())
     moviesWatched = db.relationship('Movie', backref='user', passive_deletes=True)
 
 class Movie(db.Model):
@@ -64,6 +67,7 @@ class Movie(db.Model):
     title = db.Column(db.String())
     posterPath = db.Column(db.String())
     length = db.Column(db.String())
+    genre = db.Column(db.String())
     watcher = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete="CASCADE"), nullable=False)
 
@@ -152,7 +156,6 @@ def home():
     top_rated = data["results"]
     return render_template(
         "home.html",
-        user=current_user,
         popular_movies=popular_movies,
         now_playing=now_playing,
         top_rated=top_rated,
@@ -300,8 +303,8 @@ def recommend():
     }
 
     watched = False
-    movies = current_user.moviesWatched
-    for movie in movies:
+    moviesWatched = current_user.moviesWatched
+    for movie in moviesWatched:
         if movie.title == title: #user has watched the movie
             watched = True
             break    
@@ -332,6 +335,9 @@ def profile():
         "profile.html",
         user=current_user.username,
         email=current_user.email,
+        totalMovies=len(current_user.moviesWatched),
+        watchTime=current_user.watchTime,
+        favGenre=current_user.favGenre,
     )
 
 
@@ -343,40 +349,113 @@ def addToWatchedList():
         posterPath = request.form["posterPath"]
         length = request.form["length"]
         genre = request.form["genre"]
-        # print(title)
-        # print(posterPath)
-        # print(length)
-        # print(genre)
         hours = int(length[0])
         minutes = int(length[-9:-7])
         length = str(int((60*hours) + minutes))
 
-        movie = Movie(title = title,posterPath = posterPath,length = length, watcher = current_user.id)
+        movie = Movie(title = title,posterPath = posterPath,length = length, genre = genre, watcher = current_user.id)
+
+        user = User.query.filter_by(id=current_user.id).first()
+        current_user.watchTime += (int(length)//60)
+
+
+
         db.session.add(movie)
+
+   
+        currentMovieGenres = genre.split(',')
+        genres = [x for x in currentMovieGenres]
+        for movie in current_user.moviesWatched:
+            temp = movie.genre.split(',')
+            for x in temp:
+                genres.append(x)    
+
+   
+        import statistics
+        from statistics import mode
+
+        print('genres')
+        print(genres)
+        print(mode(genres))
+        current_user.favGenre = mode(genres)
+
         db.session.commit()
         return "success"
 
-@app.route("/recommend")
+# @app.route("/recommend")
+# @login_required
+# def recommendation():
+#     movie = "Titan A.E."
+#     index = movies[movies["title"] == movie].index[0]
+#     distances = sorted(
+#         list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1]
+#     )
+#     recommend_movies = []
+#     recommended_movie_images = []
+#     for i in distances[1:6]:
+#         recommend_movies.append(movies.iloc[i[0]].title)
+#         movie_id = movies.iloc[i[0]].movie_id
+#         recommended_movie_images.append(fetch_poster(movie_id))
+
+#     data = {
+#         "recommend_movies": recommend_movies,
+#         "recommended_movie_images": recommended_movie_images,
+#     }
+#     return render_template("recomend.html", data=data)
+
+
+@app.route("/recommendation")
 @login_required
 def recommendation():
-    movie = "Titan A.E."
-    index = movies[movies["title"] == movie].index[0]
-    distances = sorted(
-        list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1]
-    )
-    recommend_movies = []
-    recommended_movie_images = []
-    for i in distances[1:6]:
-        recommend_movies.append(movies.iloc[i[0]].title)
-        movie_id = movies.iloc[i[0]].movie_id
-        recommended_movie_images.append(fetch_poster(movie_id))
+    moviesWatched = current_user.moviesWatched
 
-    data = {
-        "recommend_movies": recommend_movies,
-        "recommended_movie_images": recommended_movie_images,
-    }
-    return render_template("recomend.html", data=data)
+    seenMovies = []
+    i = 0
+    while i<min(9,len(moviesWatched)):
+        x = random.randint(0,len(moviesWatched)-1)
+        if moviesWatched[x] not in seenMovies:
+            seenMovies.append(moviesWatched[x])
+            i+=1
 
+    print('seenMovies')
+    print(seenMovies)
+
+    print('seenMovies1')
+    print(seenMovies)
+
+    recommendedMovies = []
+    i=0
+    while i < len(seenMovies):
+        movieTitle = seenMovies[i].title
+        if not (movieTitle in movies["title"].tolist()):
+            print(movieTitle)
+            seenMovies.pop(i)
+            continue
+        index = movies[movies["title"] == movieTitle].index[0]
+        distances = sorted(
+            list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1]
+        )
+        temp = []
+        for j in distances[1:9]:
+            url = "https://api.themoviedb.org/3/search/movie?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US&query={}&page=1&include_adult=false".format(
+            movies.iloc[j[0]].title
+            )
+            data = requests.get(url)
+            data = data.json()
+            res = data["results"]
+            # print('res')
+            # print(res)
+            temp.append(res)
+        recommendedMovies.append(temp)
+        i+=1
+        # print(recommendedMovies)
+
+    print('seenMovies3')
+    print(seenMovies)
+
+    
+
+    return render_template("recommendationPage.html", seenMovies=seenMovies, recommendedMovies = recommendedMovies)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=7000)

@@ -8,7 +8,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/5/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <title>Movie Buffs</title>
 </head>
 
@@ -23,7 +23,7 @@
             <div class="menu-container">
                 <ul class="menu-list">
                     <li class="menu-list-item active"><a href="/" id="home">Home</a></li>
-                    <li class="menu-list-item"><a href="/recommend" id="recommend">Your Recommendations</a></li>
+                    <li class="menu-list-item"><a href="/recommendation" id="recommend">Your Recommendations</a></li>
                 </ul>
             </div>
             <div class="container_search">
@@ -37,7 +37,7 @@
 
 
             <div class="profile-container">
-                {% if user.is_authenticated %}
+                {% if current_user.is_authenticated %}
                 <li class="menu-list-item" style="list-style-type: none;"><a href="/logout" id="recommend">Logout</a>
                 </li>
                 <img class="profile-picture" src="/static/nav-profile-pic.png" alt="">
@@ -46,16 +46,17 @@
                             <span class="profile-text">{{current_user.username}}</span>
                         </a>
                 </div>
-                <div class="toggle">
-                    <i class="fas fa-moon toggle-icon"></i>
-                    <i class="fas fa-sun toggle-icon"></i>
-                    <div class="toggle-ball"></div>
-                </div>
+
 
                 {% else %}
                 <li class="menu-list-item" style="list-style-type: none;"><a href="/login" id="recommend">Login</a>
                 </li>
                 {% endif %}
+                <div class="toggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <i class="fas fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -71,7 +72,7 @@
                     <div class="movie-list-wrapper">
                         <div class="movie-list">
                             {% for movie in now_playing %}
-                            {% if user.is_authenticated %}
+                            {% if current_user.is_authenticated %}
                             <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
@@ -99,7 +100,7 @@
                     <div class="movie-list-wrapper">
                         <div class="movie-list">
                             {% for movie in top_rated %}
-                            {% if user.is_authenticated %}
+                            {% if current_user.is_authenticated %}
                             <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">
@@ -127,7 +128,7 @@
                     <div class="movie-list-wrapper">
                         <div class="movie-list">
                             {% for movie in popular_movies %}
-                            {% if user.is_authenticated %}
+                            {% if current_user.is_authenticated %}
                             <div class="movie-list-item" onclick="goToMoviePage(this)" title={{movie.id}}>
                                 <img class="movie-list-item-img"
                                     src="https://image.tmdb.org/t/p/original{{movie.poster_path}}" alt="">

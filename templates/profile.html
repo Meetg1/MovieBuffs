@@ -23,7 +23,7 @@
             <div class="menu-container">
                 <ul class="menu-list">
                     <li class="menu-list-item active"><a href="/" id="home">Home</a></li>
-                    <li class="menu-list-item"><a href="/recommend" id="recommend">Your Recommendations</a></li>
+                    <li class="menu-list-item"><a href="/recommendation" id="recommend">Your Recommendations</a></li>
                 </ul>
             </div>
             <div class="container_search">
@@ -37,25 +37,26 @@
 
 
             <div class="profile-container">
-                {% if user.is_authenticated %}
+                {% if current_user.is_authenticated %}
                 <li class="menu-list-item" style="list-style-type: none;"><a href="/logout" id="recommend">Logout</a>
                 </li>
                 <img class="profile-picture" src="/static/nav-profile-pic.png" alt="">
                 <div class="profile-text-container">
                     <li class="menu-list-item" style="list-style-type: none;"><a href="/profile" id="recommend">
-                        <span class="profile-text">{{current_user.username}}</span>
-                    </a>
+                            <span class="profile-text">{{current_user.username}}</span>
+                        </a>
                 </div>
-                <div class="toggle">
-                    <i class="fas fa-moon toggle-icon"></i>
-                    <i class="fas fa-sun toggle-icon"></i>
-                    <div class="toggle-ball"></div>
-                </div>
+
 
                 {% else %}
                 <li class="menu-list-item" style="list-style-type: none;"><a href="/login" id="recommend">Login</a>
                 </li>
                 {% endif %}
+                <div class="toggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <i class="fas fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -78,93 +79,105 @@
                     <h1 style="color:white;">Username : {{user}}</h1>
                     <br>
                     <h1 style="color:white;">Email : {{email}}</h1>
-                     <br><br><br>
-                    <div style="width: 200px;float:left;text-align:center;height:200px; background:#d3d3d3;border:4px solid white; margin:10px; border-radius:9px;">
-                        <div style="position:relative;top:20px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 27px;color:#404040"><strong>Movies Watched</strong>
+                    <br><br><br>
+                    <div
+                        style="width: 200px;float:left;text-align:center;height:200px; background:#d3d3d3;border:4px solid white; margin:10px; border-radius:9px;">
+                        <div
+                            style="position:relative;top:20px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 27px;color:#404040">
+                            <strong>Movies Watched</strong>
                         </div>
-                        <div style="position:relative;top:40px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 50px;"><strong>36</strong>
+                        <div
+                            style="position:relative;top:40px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 50px;">
+                            <strong>{{totalMovies}}</strong>
                         </div>
                     </div>
-                    <div style="width: 200px; float:left; text-align:center;height:200px; background:#d3d3d3;border:4px solid white; margin:10px; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 27px;margin-left:50px;margin-right:50px;border-radius:9px;">
-                        <div style="position:relative;top:20px;color:#404040"><strong>Watchtime<br>(hours)</strong></div>
-                        <div style="position:relative;top:40px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 50px ;"><strong>780</strong>
+                    <div
+                        style="width: 200px; float:left; text-align:center;height:200px; background:#d3d3d3;border:4px solid white; margin:10px; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 27px;margin-left:50px;margin-right:50px;border-radius:9px;">
+                        <div style="position:relative;top:20px;color:#404040"><strong>Watchtime<br>(hours)</strong>
+                        </div>
+                        <div
+                            style="position:relative;top:40px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 50px ;">
+                            <strong>{{watchTime}}</strong>
                         </div>
 
-                   </div>   
-                   <div style="width: 200px; float:left; text-align:center;height:200px; background:#d3d3d3;border:4px solid white; margin:10px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 27px; margin:10px;border-radius:9px;">
-                    <div style="position:relative;top:20px;color:#404040"><strong>Favourite Genre</strong></div>
-                    <div style="position:relative;top:47px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 38px;"><strong>Thriller</strong>
                     </div>
+                    <div
+                        style="width: 200px; float:left; text-align:center;height:200px; background:#d3d3d3;border:4px solid white; margin:10px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 27px; margin:10px;border-radius:9px;">
+                        <div style="position:relative;top:20px;color:#404040"><strong>Favourite Genre</strong></div>
+                        <div
+                            style="position:relative;top:47px;font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 38px;">
+                            <strong>{{favGenre}}</strong>
+                        </div>
 
                     </div>
-                    </div>    
-                </div>            
+                </div>
             </div>
         </div>
-        <br/>
+    </div>
+    <br />
     </div>
 
-<br><br><br><br>
-        <div class="content-container">
-            <div class="movie-list-container">
-                <h1 class="movie-list-title" style="color:white;">My Watched Movies</h1>
-                <div class="movie-list-wrapper">
-                    <div class="movie-list">
-                        <div class="movie-list-item">
-                            <img class="movie-list-item-img" src="/static/img/10.jpg" alt="">
-                            <span class="movie-list-item-title">Her</span>
-                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                                hic fugit similique accusantium.</p>
-                            <button class="movie-list-item-button">Watch</button>
-                        </div>
-                        <div class="movie-list-item">
-                            <img class="movie-list-item-img" src="/static/img/11.jpg" alt="">
-                            <span class="movie-list-item-title">Star Wars</span>
-                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                                hic fugit similique accusantium.</p>
-                            <button class="movie-list-item-button">Watch</button>
-                        </div>
-                        <div class="movie-list-item">
-                            <img class="movie-list-item-img" src="/static/img/12.jpg" alt="">
-                            <span class="movie-list-item-title">Storm</span>
-                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                                hic fugit similique accusantium.</p>
-                            <button class="movie-list-item-button">Watch</button>
-                        </div>
-                        <div class="movie-list-item">
-                            <img class="movie-list-item-img" src="/static/img/13.jpg" alt="">
-                            <span class="movie-list-item-title">1917</span>
-                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                                hic fugit similique accusantium.</p>
-                            <button class="movie-list-item-button">Watch</button>
-                        </div>
-                        <div class="movie-list-item">
-                            <img class="movie-list-item-img" src="/static/img/14.jpg" alt="">
-                            <span class="movie-list-item-title">Avengers</span>
-                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                                hic fugit similique accusantium.</p>
-                            <button class="movie-list-item-button">Watch</button>
-                        </div>
-                        <div class="movie-list-item">
-                            <img class="movie-list-item-img" src="/static/img/15.jpg" alt="">
-                            <span class="movie-list-item-title">Her</span>
-                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                                hic fugit similique accusantium.</p>
-                            <button class="movie-list-item-button">Watch</button>
-                        </div>
-                        <div class="movie-list-item">
-                            <img class="movie-list-item-img" src="/static/img/16.jpg" alt="">
-                            <span class="movie-list-item-title">Her</span>
-                            <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                                hic fugit similique accusantium.</p>
-                            <button class="movie-list-item-button">Watch</button>
-                        </div>
+    <br><br><br><br>
+    <div class="content-container">
+        <div class="movie-list-container">
+            <h1 class="movie-list-title" style="color:white;">My Watched Movies</h1>
+            <div class="movie-list-wrapper">
+                <div class="movie-list">
+                    <div class="movie-list-item">
+                        <img class="movie-list-item-img" src="/static/img/10.jpg" alt="">
+                        <span class="movie-list-item-title">Her</span>
+                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                            hic fugit similique accusantium.</p>
+                        <button class="movie-list-item-button">Watch</button>
                     </div>
-                    <i class="fas fa-chevron-right arrow"></i>
+                    <div class="movie-list-item">
+                        <img class="movie-list-item-img" src="/static/img/11.jpg" alt="">
+                        <span class="movie-list-item-title">Star Wars</span>
+                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                            hic fugit similique accusantium.</p>
+                        <button class="movie-list-item-button">Watch</button>
+                    </div>
+                    <div class="movie-list-item">
+                        <img class="movie-list-item-img" src="/static/img/12.jpg" alt="">
+                        <span class="movie-list-item-title">Storm</span>
+                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                            hic fugit similique accusantium.</p>
+                        <button class="movie-list-item-button">Watch</button>
+                    </div>
+                    <div class="movie-list-item">
+                        <img class="movie-list-item-img" src="/static/img/13.jpg" alt="">
+                        <span class="movie-list-item-title">1917</span>
+                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                            hic fugit similique accusantium.</p>
+                        <button class="movie-list-item-button">Watch</button>
+                    </div>
+                    <div class="movie-list-item">
+                        <img class="movie-list-item-img" src="/static/img/14.jpg" alt="">
+                        <span class="movie-list-item-title">Avengers</span>
+                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                            hic fugit similique accusantium.</p>
+                        <button class="movie-list-item-button">Watch</button>
+                    </div>
+                    <div class="movie-list-item">
+                        <img class="movie-list-item-img" src="/static/img/15.jpg" alt="">
+                        <span class="movie-list-item-title">Her</span>
+                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                            hic fugit similique accusantium.</p>
+                        <button class="movie-list-item-button">Watch</button>
+                    </div>
+                    <div class="movie-list-item">
+                        <img class="movie-list-item-img" src="/static/img/16.jpg" alt="">
+                        <span class="movie-list-item-title">Her</span>
+                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
+                            hic fugit similique accusantium.</p>
+                        <button class="movie-list-item-button">Watch</button>
+                    </div>
                 </div>
-                </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='home.js')}}"></script>
+                <i class="fas fa-chevron-right arrow"></i>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{{url_for('static', filename='home.js')}}"></script>
 
 </body>
 
