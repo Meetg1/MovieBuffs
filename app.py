@@ -1,3 +1,9 @@
+import urllib.request
+import bs4 as bs
+import numpy as np
+from datetime import date, datetime
+
+
 from flask import (
     Flask,
     render_template,
@@ -38,6 +44,10 @@ my_api_key = os.getenv("my_api_key")
 
 DB_NAME = "database.db"
 
+filename = "nlp_model.pkl"
+clf = pickle.load(open(filename, "rb"))
+vectorizer = pickle.load(open("tranform.pkl", "rb"))
+
 
 def create_database(app):
     if not path.exists("./" + DB_NAME):
@@ -57,9 +67,10 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String())
-    watchTime = db.Column(db.Integer,default=0)
+    watchTime = db.Column(db.Integer, default=0)
     favGenre = db.Column(db.String())
-    moviesWatched = db.relationship('Movie', backref='user', passive_deletes=True)
+    moviesWatched = db.relationship("Movie", backref="user", passive_deletes=True)
+
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -68,8 +79,10 @@ class Movie(db.Model):
     posterPath = db.Column(db.String())
     length = db.Column(db.String())
     genre = db.Column(db.String())
-    watcher = db.Column(db.Integer, db.ForeignKey(
-        'user.id', ondelete="CASCADE"), nullable=False)
+    watcher = db.Column(
+        db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False
+    )
+
 
 create_database(app)
 
@@ -116,7 +129,7 @@ def home():
         searchResults = data["results"]
         if len(searchResults) == 0:
             searchResults = False
-       
+
         return render_template(
             "searchResults.html",
             user=current_user,
@@ -305,15 +318,47 @@ def recommend():
     watched = False
     moviesWatched = current_user.moviesWatched
     for movie in moviesWatched:
-        if movie.title == title: #user has watched the movie
+        if movie.title == title:  # user has watched the movie
             watched = True
-            break    
+            break
+
+    # web scraping to get user reviews from IMDB site
+    sauce = urllib.request.urlopen(
+        "https://www.imdb.com/title/{}/reviews?ref_=tt_ov_rt".format(imdb_id)
+    ).read()
+    soup = bs.BeautifulSoup(sauce, "lxml")
+    soup_result = soup.find_all("div", {"class": "text show-more__control"})
+
+    reviews_list = []  # list of reviews
+    reviews_status = []  # list of comments (good or bad)
+    for reviews in soup_result:
+        if reviews.string:
+            reviews_list.append(reviews.string)
+            # passing the review to our model
+            movie_review_list = np.array([reviews.string])
+            movie_vector = vectorizer.transform(movie_review_list)
+            pred = clf.predict(movie_vector)
+            reviews_status.append("Positive" if pred else "Negative")
+
+    # getting current date
+    movie_rel_date = ""
+    curr_date = ""
+    if rel_date:
+        today = str(date.today())
+        curr_date = datetime.strptime(today, "%Y-%m-%d")
+        movie_rel_date = datetime.strptime(rel_date, "%Y-%m-%d")
+
+    # combining reviews and comments into a dictionary
+    movie_reviews = {
+        reviews_list[i]: reviews_status[i] for i in range(len(reviews_list))
+    }
 
     # # passing all the data to the html file
     return render_template(
         "movie.html",
         title=title,
-        tmdb_id = tmdb_id,
+        reviews=movie_reviews,
+        tmdb_id=tmdb_id,
         poster=poster,
         overview=overview,
         vote_average=vote_average,
@@ -324,7 +369,7 @@ def recommend():
         genres=genres,
         casts=casts,
         cast_details=cast_details,
-        watched = watched
+        watched=watched,
     )
 
 
@@ -341,7 +386,7 @@ def profile():
     )
 
 
-@app.route("/addToWatchedList",methods=["POST"])
+@app.route("/addToWatchedList", methods=["POST"])
 @login_required
 def addToWatchedList():
     if request.method == "POST":
@@ -351,36 +396,39 @@ def addToWatchedList():
         genre = request.form["genre"]
         hours = int(length[0])
         minutes = int(length[-9:-7])
-        length = str(int((60*hours) + minutes))
+        length = str(int((60 * hours) + minutes))
 
-        movie = Movie(title = title,posterPath = posterPath,length = length, genre = genre, watcher = current_user.id)
+        movie = Movie(
+            title=title,
+            posterPath=posterPath,
+            length=length,
+            genre=genre,
+            watcher=current_user.id,
+        )
 
         user = User.query.filter_by(id=current_user.id).first()
-        current_user.watchTime += (int(length)//60)
-
-
+        current_user.watchTime += int(length) // 60
 
         db.session.add(movie)
 
-   
-        currentMovieGenres = genre.split(',')
+        currentMovieGenres = genre.split(",")
         genres = [x for x in currentMovieGenres]
         for movie in current_user.moviesWatched:
-            temp = movie.genre.split(',')
+            temp = movie.genre.split(",")
             for x in temp:
-                genres.append(x)    
+                genres.append(x)
 
-   
         import statistics
         from statistics import mode
 
-        print('genres')
+        print("genres")
         print(genres)
         print(mode(genres))
         current_user.favGenre = mode(genres)
 
         db.session.commit()
         return "success"
+
 
 # @app.route("/recommend")
 # @login_required
@@ -411,20 +459,20 @@ def recommendation():
 
     seenMovies = []
     i = 0
-    while i<min(9,len(moviesWatched)):
-        x = random.randint(0,len(moviesWatched)-1)
+    while i < min(9, len(moviesWatched)):
+        x = random.randint(0, len(moviesWatched) - 1)
         if moviesWatched[x] not in seenMovies:
             seenMovies.append(moviesWatched[x])
-            i+=1
+            i += 1
 
-    print('seenMovies')
+    print("seenMovies")
     print(seenMovies)
 
-    print('seenMovies1')
+    print("seenMovies1")
     print(seenMovies)
 
     recommendedMovies = []
-    i=0
+    i = 0
     while i < len(seenMovies):
         movieTitle = seenMovies[i].title
         if not (movieTitle in movies["title"].tolist()):
@@ -438,7 +486,7 @@ def recommendation():
         temp = []
         for j in distances[1:9]:
             url = "https://api.themoviedb.org/3/search/movie?api_key=798a8793eacee68e7fdc971d4dec3815&language=en-US&query={}&page=1&include_adult=false".format(
-            movies.iloc[j[0]].title
+                movies.iloc[j[0]].title
             )
             data = requests.get(url)
             data = data.json()
@@ -447,15 +495,18 @@ def recommendation():
             # print(res)
             temp.append(res)
         recommendedMovies.append(temp)
-        i+=1
+        i += 1
         # print(recommendedMovies)
 
-    print('seenMovies3')
+    print("seenMovies3")
     print(seenMovies)
 
-    
+    return render_template(
+        "recommendationPage.html",
+        seenMovies=seenMovies,
+        recommendedMovies=recommendedMovies,
+    )
 
-    return render_template("recommendationPage.html", seenMovies=seenMovies, recommendedMovies = recommendedMovies)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=7000)
