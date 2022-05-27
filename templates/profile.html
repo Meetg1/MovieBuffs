@@ -123,55 +123,14 @@
             <h1 class="movie-list-title" style="color:white;">My Watched Movies</h1>
             <div class="movie-list-wrapper">
                 <div class="movie-list">
+                    {% for movie in watchedMovies %}
                     <div class="movie-list-item">
-                        <img class="movie-list-item-img" src="/static/img/10.jpg" alt="">
-                        <span class="movie-list-item-title">Her</span>
-                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                            hic fugit similique accusantium.</p>
-                        <button class="movie-list-item-button">Watch</button>
+                        <img class="movie-list-item-img" src="{{movie.posterPath}}" alt="">
+                        <span class="movie-list-item-title">{{movie.title}}</span>
+                        <p class="movie-list-item-desc"></p>
+
                     </div>
-                    <div class="movie-list-item">
-                        <img class="movie-list-item-img" src="/static/img/11.jpg" alt="">
-                        <span class="movie-list-item-title">Star Wars</span>
-                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                            hic fugit similique accusantium.</p>
-                        <button class="movie-list-item-button">Watch</button>
-                    </div>
-                    <div class="movie-list-item">
-                        <img class="movie-list-item-img" src="/static/img/12.jpg" alt="">
-                        <span class="movie-list-item-title">Storm</span>
-                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                            hic fugit similique accusantium.</p>
-                        <button class="movie-list-item-button">Watch</button>
-                    </div>
-                    <div class="movie-list-item">
-                        <img class="movie-list-item-img" src="/static/img/13.jpg" alt="">
-                        <span class="movie-list-item-title">1917</span>
-                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                            hic fugit similique accusantium.</p>
-                        <button class="movie-list-item-button">Watch</button>
-                    </div>
-                    <div class="movie-list-item">
-                        <img class="movie-list-item-img" src="/static/img/14.jpg" alt="">
-                        <span class="movie-list-item-title">Avengers</span>
-                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                            hic fugit similique accusantium.</p>
-                        <button class="movie-list-item-button">Watch</button>
-                    </div>
-                    <div class="movie-list-item">
-                        <img class="movie-list-item-img" src="/static/img/15.jpg" alt="">
-                        <span class="movie-list-item-title">Her</span>
-                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                            hic fugit similique accusantium.</p>
-                        <button class="movie-list-item-button">Watch</button>
-                    </div>
-                    <div class="movie-list-item">
-                        <img class="movie-list-item-img" src="/static/img/16.jpg" alt="">
-                        <span class="movie-list-item-title">Her</span>
-                        <p class="movie-list-item-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. At
-                            hic fugit similique accusantium.</p>
-                        <button class="movie-list-item-button">Watch</button>
-                    </div>
+                    {% endfor %}
                 </div>
                 <i class="fas fa-chevron-right arrow"></i>
             </div>
