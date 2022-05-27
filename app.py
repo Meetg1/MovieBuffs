@@ -380,6 +380,7 @@ def profile():
         "profile.html",
         user=current_user.username,
         email=current_user.email,
+        watchedMovies=current_user.moviesWatched,
         totalMovies=len(current_user.moviesWatched),
         watchTime=current_user.watchTime,
         favGenre=current_user.favGenre,
